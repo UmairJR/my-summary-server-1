@@ -11,6 +11,7 @@ const app = express();
 const corsOptions = {
   origin: 'http://localhost:3000', // Allow only this origin
   methods: 'GET,POST',             // Allow only specific methods
+  credentials:true, 
 };
 app.use(cors(corsOptions));
 const openAI = new openai.OpenAI({
@@ -29,7 +30,7 @@ const upload = multer({ storage: storage })
 app.get('/api/upload', (req, res) => {
   res.json({ message: 'GET REQUEST SUCCESSFULL' })
 })
-const mainPath = '';
+var mainPath = '';
 app.post('/api/upload', async (req, res) => {
   const chunks = [];
   console.log(req.body)
