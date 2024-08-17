@@ -57,15 +57,6 @@ app.post('/api/upload', async (req, res) => {
     const newPath = path.join('public', 'uploads', audioFile[0].originalFilename);
     console.log('Newpath: ', newPath);
 
-    // Move the file from the temporary location to the desired location
-    // fs.rename(oldPath, newPath, (err) => {
-    //   if (err) {
-    //     console.error('Error saving file:', err);
-    //     return res.status(500).json({ message: 'Failed to save audio file.' });
-    //   }
-    //   console.log('Audio Uploaded');
-
-    // });
     fs.copyFile(oldPath, newPath, (copyErr) => {
       if (copyErr) {
         console.error('Error saving file:', copyErr);
@@ -77,9 +68,7 @@ app.post('/api/upload', async (req, res) => {
           console.error('Error removing old file:', rmErr);
           return res.status(500).json({ message: 'Failed to clean up old file.' });
         }
-
         console.log('Audio Uploaded');
-        return res.status(200).json({ message: 'Audio file uploaded successfully.' });
       });
     });
   });
