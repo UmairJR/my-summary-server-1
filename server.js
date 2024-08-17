@@ -66,8 +66,22 @@ app.post('/api/upload', async (req, res) => {
     //   console.log('Audio Uploaded');
 
     // });
-    await fs.copyFile(oldPath, newPath);
-    await fs.rm(oldPath);
+    fs.copyFile(oldPath, newPath, (copyErr) => {
+      if (copyErr) {
+        console.error('Error saving file:', copyErr);
+        return res.status(500).json({ message: 'Failed to save audio file.' });
+      }
+
+      fs.rm(oldPath, (rmErr) => {
+        if (rmErr) {
+          console.error('Error removing old file:', rmErr);
+          return res.status(500).json({ message: 'Failed to clean up old file.' });
+        }
+
+        console.log('Audio Uploaded');
+        return res.status(200).json({ message: 'Audio file uploaded successfully.' });
+      });
+    });
   });
   // const mainPath = './' + newPath;
   // console.log('Main path:' ,mainPath);
