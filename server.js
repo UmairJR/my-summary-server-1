@@ -29,7 +29,7 @@ const upload = multer({ storage: storage })
 app.get('/api/upload', (req, res) => {
   res.json({ message: 'GET REQUEST SUCCESSFULL' })
 })
-
+const mainPath = '';
 app.post('/api/upload', async (req, res) => {
   const chunks = [];
   console.log(req.body)
@@ -53,9 +53,9 @@ app.post('/api/upload', async (req, res) => {
     console.log('Oldpath: ', oldPath);
 
     // Define the new path where you want to save the file
-    const newPath = path.join('public', 'uploads', audioFile[0].originalFilename);
+    const newPath = path.join('public', 'uploads', audioFile[0].newFilename + '.mp3');
     console.log('Newpath: ', newPath);
-
+    mainPath = newPath;
     fs.copyFile(oldPath, newPath, (copyErr) => {
       if (copyErr) {
         console.error('Error saving file:', copyErr);
@@ -71,14 +71,14 @@ app.post('/api/upload', async (req, res) => {
       });
     });
   });
-  // const mainPath = './' + newPath;
-  // console.log('Main path:' ,mainPath);
+
+  console.log('Main path:', mainPath);
 
   try {
     console.log('TRANSCRIPTION Begins');
     const transcription = await openAI.audio.transcriptions.create({
       // file: fs.createReadStream('./' + newPath),
-      file: fs.createReadStream('./public/uploads/output.mp3'),
+      file: fs.createReadStream(mainPath),
       model: "whisper-1",
     });
     const transcript = transcription.text;
