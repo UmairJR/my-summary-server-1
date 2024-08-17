@@ -11,7 +11,7 @@ const app = express();
 const corsOptions = {
   origin: 'http://localhost:3000', // Allow only this origin
   methods: 'GET,POST',             // Allow only specific methods
-  credentials:true, 
+  credentials: true,
 };
 app.use(cors(corsOptions));
 const openAI = new openai.OpenAI({
@@ -56,7 +56,7 @@ app.post('/api/upload', async (req, res) => {
     // Define the new path where you want to save the file
     const newPath = path.join('public', 'uploads', audioFile[0].newFilename + '.mp3');
     console.log('Newpath: ', newPath);
-    mainPath = newPath;
+
     fs.copyFile(oldPath, newPath, (copyErr) => {
       if (copyErr) {
         console.error('Error saving file:', copyErr);
@@ -71,46 +71,48 @@ app.post('/api/upload', async (req, res) => {
         console.log('Audio Uploaded');
       });
     });
+    try {
+      console.log('TRANSCRIPTION Begins');
+      console.log('Newpath: ', newPath);
+      const transcription = await openAI.audio.transcriptions.create({
+        // file: fs.createReadStream('./' + newPath),
+        file: fs.createReadStream(newPath),
+        model: "whisper-1",
+      });
+      const transcript = transcription.text;
+      // const transcript = 'एक, दो, तीन, चार, पाथ, छे, साथ, आट, नौ, द';
+      console.log(transcript);
+      console.log('Summarizing');
+      const systemPrompt = 'If the text is in other language, then convert it to English. Also mention their in the format that Original Language: (detected language) the Converted to : English, the Context:(some context of the audio transcript), then Summary: (Summarize the transcript without changing its contexts) '
+      const completion = await openAI.chat.completions.create({
+        model: "gpt-3.5-turbo-0125",
+        temperature: 0.2,
+        messages: [
+          {
+            role: "system",
+            content: systemPrompt
+          },
+          {
+            role: "user",
+            content: transcript
+          }
+        ]
+      });
+      console.log(completion);
+
+      return res.status(200).json({ transcription: transcript, summary: completion.choices[0].message.content });
+
+      // return res.status(200).json({ transcription : transcription.text });
+    }
+    catch (err) {
+      console.log(err);
+
+    }
   });
 
-  console.log('Main path:', mainPath);
 
-  try {
-    console.log('TRANSCRIPTION Begins');
-    const transcription = await openAI.audio.transcriptions.create({
-      // file: fs.createReadStream('./' + newPath),
-      file: fs.createReadStream(mainPath),
-      model: "whisper-1",
-    });
-    const transcript = transcription.text;
-    // const transcript = 'एक, दो, तीन, चार, पाथ, छे, साथ, आट, नौ, द';
-    console.log(transcript);
-    console.log('Summarizing');
-    const systemPrompt = 'If the text is in other language, then convert it to English. Also mention their in the format that Original Language: (detected language) the Converted to : English, the Context:(some context of the audio transcript), then Summary: (Summarize the transcript without changing its contexts) '
-    const completion = await openAI.chat.completions.create({
-      model: "gpt-3.5-turbo-0125",
-      temperature: 0.2,
-      messages: [
-        {
-          role: "system",
-          content: systemPrompt
-        },
-        {
-          role: "user",
-          content: transcript
-        }
-      ]
-    });
-    console.log(completion);
 
-    return res.status(200).json({ transcription: transcript, summary: completion.choices[0].message.content });
 
-    // return res.status(200).json({ transcription : transcription.text });
-  }
-  catch (err) {
-    console.log(err);
-
-  }
 
 })
 
