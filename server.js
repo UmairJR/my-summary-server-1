@@ -37,7 +37,7 @@ app.post('/api/upload', async (req, res) => {
 
   const form = new formidable.IncomingForm();
 
-  form.parse(req, (err, fields, files) => {
+  form.parse(req, async (err, fields, files) => {
     if (err) {
       console.error('Error parsing the form:', err);
       return res.status(500).json({ message: 'Error parsing the form.' });
@@ -58,18 +58,20 @@ app.post('/api/upload', async (req, res) => {
     console.log('Newpath: ', newPath);
 
     // Move the file from the temporary location to the desired location
-    fs.rename(oldPath, newPath, (err) => {
-      if (err) {
-        console.error('Error saving file:', err);
-        return res.status(500).json({ message: 'Failed to save audio file.' });
-      }
-      console.log('Audio Uploaded');
-        
-    });
+    // fs.rename(oldPath, newPath, (err) => {
+    //   if (err) {
+    //     console.error('Error saving file:', err);
+    //     return res.status(500).json({ message: 'Failed to save audio file.' });
+    //   }
+    //   console.log('Audio Uploaded');
+
+    // });
+    await fs.copyFile(oldPath, newPath);
+    await fs.rm(oldPath);
   });
   // const mainPath = './' + newPath;
   // console.log('Main path:' ,mainPath);
-  
+
   try {
     console.log('TRANSCRIPTION Begins');
     const transcription = await openAI.audio.transcriptions.create({
@@ -97,9 +99,9 @@ app.post('/api/upload', async (req, res) => {
       ]
     });
     console.log(completion);
-    
-    return res.status(200).json({transcription: transcript, summary : completion.choices[0].message.content});
-    
+
+    return res.status(200).json({ transcription: transcript, summary: completion.choices[0].message.content });
+
     // return res.status(200).json({ transcription : transcription.text });
   }
   catch (err) {
@@ -115,5 +117,5 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log("Server running on " + port);
   console.log(process.env.OPENAI_API_KEY);
-  
+
 })
