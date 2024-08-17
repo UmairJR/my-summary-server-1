@@ -11,7 +11,6 @@ const app = express();
 const corsOptions = {
   origin: 'http://localhost:3000', // Allow only this origin
   methods: 'GET,POST',             // Allow only specific methods
-  allowedHeaders: ['Content-Type'],// Allow only specific headers
 };
 app.use(cors(corsOptions));
 const openAI = new openai.OpenAI({
