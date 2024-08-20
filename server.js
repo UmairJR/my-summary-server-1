@@ -86,10 +86,10 @@ app.post('/api/upload', async (req, res) => {
       const systemPrompt =
         `The following text is a transcript from a video. If the text is in a language other than English, convert it to English and specify the original language. Provide the summary of the text while maintaining its context.
 
-          ** Original Language:** [Detected language (detect the original language and mention it, for example, Hindi, spanish, etc)]
-          ** Converted to:** English
-          ** Context:** [Brief description of the video''s topic or context]
-          ** Summary:** [Summarize the transcript, preserving the context and main points of the original text.]`
+          **Original Language:** [Detected language (detect the original language and mention it, for example, Hindi, spanish, etc)]
+          **Converted to:** English
+          **Context:** [Brief description of the video''s topic or context]
+          **Summary:** [Summarize the transcript, preserving the context and main points of the original text.]`
 
       const completion = await openAI.chat.completions.create({
         model: "gpt-3.5-turbo-0125",
