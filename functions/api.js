@@ -1,4 +1,5 @@
 const express = require('express');
+const serverless = require('serverless-http');
 const cors = require('cors');
 const multer = require('multer');
 const fs = require('fs');
@@ -8,12 +9,13 @@ const formidable = require('formidable');
 require('dotenv').config();
 
 const app = express();
+const router = express.Router()
 const corsOptions = {
   origin: 'http://localhost:3000', // Allow only this origin
   methods: 'GET,POST',             // Allow only specific methods
   credentials: true,
 };
-app.use(cors(corsOptions));
+router.use(cors(corsOptions));
 const openAI = new openai.OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
@@ -27,11 +29,11 @@ const storage = multer.diskStorage({
   }
 })
 const upload = multer({ storage: storage })
-app.get('/api/upload', (req, res) => {
+router.get('/api/upload', (req, res) => {
   res.json({ message: 'GET REQUEST SUCCESSFULL' })
 })
 var mainPath = '';
-app.post('/api/upload', async (req, res) => {
+router.post('/api/upload', async (req, res) => {
   const chunks = [];
   console.log(req.body)
 
@@ -143,11 +145,12 @@ Please ensure your response strictly follows this format:
 
 })
 
+app.use('/.netlify/functions/api', router);
+module.exports.handler = serverless(app);
 
+// const port = process.env.PORT || 5000;
+// app.listen(port, () => {
+//   console.log("Server running on " + port);
+//   console.log(process.env.OPENAI_API_KEY);
 
-const port = process.env.PORT || 5000;
-app.listen(port, () => {
-  console.log("Server running on " + port);
-  console.log(process.env.OPENAI_API_KEY);
-
-})
+// })
