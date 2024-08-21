@@ -12,7 +12,7 @@ const app = express();
 const router = express.Router()
 const corsOptions = {
   credentials: true,
-  origin: true
+  origin: "*"
 
 };
 router.use(cors(corsOptions));
