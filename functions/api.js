@@ -15,7 +15,7 @@ const corsOptions = {
   origin: "*"
 
 };
-router.use(cors(corsOptions));
+app.use(cors(corsOptions));
 const openAI = new openai.OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
