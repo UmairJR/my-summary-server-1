@@ -6,7 +6,7 @@
   "author": "Umair JR",
   "private": false,
   "scripts": {
-    "build": "netlify deploy --prod"
+    "start": "node api.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
