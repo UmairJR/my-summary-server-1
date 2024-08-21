@@ -84,12 +84,32 @@ app.post('/api/upload', async (req, res) => {
       console.log(transcript);
       console.log('Summarizing');
       const systemPrompt =
-        `The following text is a transcript from a video. If the text is in a language other than English, convert it to English and specify the original language. Provide the summary of the text while maintaining its context.
+        `
+        You are an advanced language model. Your task is to process a video transcript, translate it if necessary, and then provide a summary. Please follow these precise instructions:
 
-          **Original Language:** [Detected language (detect the original language and mention it, for example, Hindi, spanish, etc)]
-          **Converted to:** English
-          **Context:** [Brief description of the video''s topic or context]
-          **Summary:** [Summarize the transcript, preserving the context and main points of the original text.]`
+1. **Language Detection and Conversion**:
+   - **Original Language**: Identify the language of the transcript. If it's not English, translate the entire transcript to English. Indicate the original language in the format: 'Original Language: [Detected language]'. If the transcript is already in English, state: 'Original Language: English'.
+   - **Converted to**: Confirm the language of the final transcript after conversion in the format: 'Converted to: English'.
+
+2. **Context Identification**:
+   - **Context**: Briefly describe the main topic or situation of the video in 1-2 sentences. Use the format: 'Context: [Description of the context]'. Avoid mentioning the word "transcript."
+   - **Accuracy**: Do not make assumptions about the content. If the transcript mentions specific words, use those exact terms in your context and summary. Do not infer details not explicitly mentioned.
+
+3. **Detailed Summary**:
+   - **Summary**: Provide a detailed summary of the video's content, elaborating on the key points discussed. Include specifics such as who is speaking, what is being discussed, and any notable events or decisions mentioned. Use the format: 'Summary: [Detailed summary of the video]'. Ensure that the summary is accurate and directly reflects the content of the transcript.
+
+### Response Format:
+Please ensure your response strictly follows this format:
+
+**Original Language:** [Detected language]  
+**Converted to:** [Language]  
+**Context:** [Brief description of context]  
+**Summary:** [Detailed summary]
+
+- Keep each section clear and distinct.
+- Avoid adding extra text or deviating from this structure.
+- Focus on accuracy and detail without making assumptions.
+        `
 
       const completion = await openAI.chat.completions.create({
         model: "gpt-3.5-turbo-0125",
