@@ -6,8 +6,7 @@
   "author": "Umair JR",
   "private": false,
   "scripts": {
-    "start": "./node_modules/.bin/netlify-lambda serve functions",
-    "build": "./node_modules/.bin/netlify-lambda build functions"
+    "build": "netlify deploy --prod"
   },
   "dependencies": {
     "cors": "^2.8.5",

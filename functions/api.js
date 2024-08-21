@@ -11,9 +11,9 @@ require('dotenv').config();
 const app = express();
 const router = express.Router()
 const corsOptions = {
-  origin: 'http://localhost:3000', // Allow only this origin
-  methods: 'GET,POST',             // Allow only specific methods
   credentials: true,
+  origin: true
+
 };
 router.use(cors(corsOptions));
 const openAI = new openai.OpenAI({
