@@ -29,10 +29,25 @@ const storage = multer.diskStorage({
   }
 })
 const upload = multer({ storage: storage })
+
+router.get("/", (req, res) => {
+  res.send("App is running..");
+});
+
 router.get('/api/upload', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+
+res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+
+res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.json({ message: 'GET REQUEST SUCCESSFULL' })
 })
-var mainPath = '';
+
+
+
+
+
+
 router.post('/api/upload', async (req, res) => {
   const chunks = [];
   console.log(req.body)
