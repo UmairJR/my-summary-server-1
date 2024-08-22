@@ -71,7 +71,7 @@ router.post('/api/upload', async (req, res) => {
     console.log('Oldpath: ', oldPath);
 
     // Define the new path where you want to save the file
-    const newPath = path.join('public', 'uploads', audioFile[0].newFilename + '.mp3');
+    const newPath = path.join('dist', 'uploads', audioFile[0].newFilename + '.mp3');
     console.log('Newpath: ', newPath);
 
     fs.copyFile(oldPath, newPath, (copyErr) => {
