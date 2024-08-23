@@ -35,7 +35,7 @@ router.get("/", (req, res) => {
 });
 
 router.get('/api/upload', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://vidsum-ai.vercel.app/');
+  res.setHeader('Access-Control-Allow-Origin', 'https://vidsum-ai.vercel.app');
 
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
 
@@ -49,7 +49,7 @@ router.get('/api/upload', (req, res) => {
 
 
 router.post('/api/upload', async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://vidsum-ai.vercel.app/');
+  res.setHeader('Access-Control-Allow-Origin', 'https://vidsum-ai.vercel.app');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   const chunks = [];
