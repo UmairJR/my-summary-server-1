@@ -35,7 +35,7 @@ router.get("/", (req, res) => {
 });
 
 router.get('/api/upload', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://vidsum-ai.vercel.app');
+  res.setHeader('Access-Control-Allow-Origin', ['http://localhost:3000','https://vidsum-ai.vercel.app']);
 
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
 
