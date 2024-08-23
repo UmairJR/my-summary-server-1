@@ -35,11 +35,11 @@ router.get("/", (req, res) => {
 });
 
 router.get('/api/upload', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Origin', 'https://vidsum-ai.vercel.app/');
 
-res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
 
-res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.json({ message: 'GET REQUEST SUCCESSFULL' })
 })
 
@@ -49,6 +49,9 @@ res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
 
 
 router.post('/api/upload', async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://vidsum-ai.vercel.app/');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   const chunks = [];
   console.log(req.body)
 
@@ -70,8 +73,14 @@ router.post('/api/upload', async (req, res) => {
     const oldPath = audioFile[0].filepath;
     console.log('Oldpath: ', oldPath);
 
+    const dir = path.join('/tmp', 'uploads');
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+
     // Define the new path where you want to save the file
-    const newPath = path.join('dist', 'uploads', audioFile[0].newFilename + '.mp3');
+    // const newPath = path.join('dist', 'uploads', audioFile[0].newFilename + '.mp3');
+    const newPath = path.join(dir, audioFile[0].newFilename + '.mp3');
     console.log('Newpath: ', newPath);
 
     fs.copyFile(oldPath, newPath, (copyErr) => {
